@@ -14,6 +14,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
 
     
     var webView: WKWebView?
+    //since whole UI is made in code, no need for webview to be optional
     
     var refresh = UIBarButtonItem()
     var backButton = UIBarButtonItem()
@@ -44,19 +45,15 @@ class ViewController: UIViewController, WKNavigationDelegate {
         navigationController?.isToolbarHidden = false
         
         webView?.allowsBackForwardNavigationGestures = true
-        
-        webView?.addObserver(self, forKeyPath: "loading", options: .new, context: nil)
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         title = webView.title
     }
     
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if (keyPath == "loading") {
-            backButton.isEnabled = (webView?.canGoBack)!
-            forwardButton.isEnabled = (webView?.canGoForward)!
-        }
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        backButton.isEnabled = webView.canGoBack
+        forwardButton.isEnabled = webView.canGoForward
     }
 }
 
